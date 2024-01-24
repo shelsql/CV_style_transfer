@@ -1,0 +1,14 @@
+numpy
+Pillow
+pkg-resources
+protobuf
+six
+tensorboardX
+torch
+torchvision
+torchvision
+tqdm
+opencv-python
+imageio
+tensorboard
+packaging
