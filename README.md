@@ -43,11 +43,11 @@ python test_adain.py --style path/to/style_img.jpg --content path/to/content_img
 ```
 
 #### Train
+This code trains with Laplacian loss by default, you can specify loss weights by parameters.
 ```bash
-python train_adain.py --content_dir path/to/content/imgs --style_dir path/to/style/imgs
+python train_adain.py --content_dir path/to/content/imgs --style_dir path/to/style/imgs --lap_weight some_weight --content_weight some_weight --style_weight some_weight
 ```
 
-For more details and parameters, please refer to --help option.
 
 ## References
 - [1]: X. Huang and S. Belongie. "Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization.", in ICCV, 2017.
