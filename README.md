@@ -38,15 +38,12 @@ For a pre-trained decoder, we refer you to [this link](https://github.com/naoto0
 python test_adain.py --style path/to/style_img.jpg --content path/to/content_img.jpg
 ```
 
-### Train
-Use `--content_dir` and `--style_dir` to provide the respective directory to the content and style images.
-```
-CUDA_VISIBLE_DEVICES=<gpu_id> python train.py --content_dir <content_dir> --style_dir <style_dir>
+#### Train
+```bash
+python train_adain.py --content_dir path/to/content/imgs --style_dir path/to/style/imgs
 ```
 
 For more details and parameters, please refer to --help option.
-
-I share the model trained by this code [here](https://drive.google.com/file/d/1YIBRdgGBoVllLhmz_N7PwfeP5V9Vz2Nr/view?usp=sharing)
 
 ## References
 - [1]: X. Huang and S. Belongie. "Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization.", in ICCV, 2017.

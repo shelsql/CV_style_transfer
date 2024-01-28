@@ -4,3 +4,8 @@ output*/
 *pycache*/
 logs*/
 results/
+checkpoints/
+experiments/
+blue.sh
+runner.sh
+slurm*

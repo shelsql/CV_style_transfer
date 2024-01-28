@@ -97,6 +97,7 @@ def compute_loss(X, contents_Y_hat, styles_Y_hat, contents_Y, styles_Y_gram):
     tv_l = tv_loss(X) * tv_weight
     # Add up all the losses
     l = sum(styles_l + contents_l + [tv_l])
+    #l = sum(styles_l  + [tv_l])
     return contents_l, styles_l, tv_l, l
 
 # 14.12.6. Initializing the Synthesized Image
@@ -110,7 +111,7 @@ class SynthesizedImage(nn.Module):
 
 def get_inits(X, device, lr, styles_Y):
     gen_img = SynthesizedImage(X.shape).to(device)
-    gen_img.weight.data.copy_(X.data)
+    #gen_img.weight.data.copy_(X.data)
     trainer = torch.optim.Adam(gen_img.parameters(), lr=lr)
     styles_Y_gram = [gram(Y) for Y in styles_Y]
     return gen_img(), styles_Y_gram, trainer
@@ -121,6 +122,8 @@ def train(X, contents_Y, styles_Y, content_lap, device, lr, num_epochs, lr_decay
     X, styles_Y_gram, trainer = get_inits(X, device, lr, styles_Y)
     scheduler = torch.optim.lr_scheduler.StepLR(trainer, lr_decay_epoch, 0.8)
     images = []
+    pil_image = save_image(X, "outputs/" + run_name + "/epoch_0000.jpg")
+    images.append(pil_image)
     for epoch in tqdm(range(num_epochs)):
         trainer.zero_grad()
         contents_Y_hat, styles_Y_hat = extract_features(
@@ -146,8 +149,8 @@ def train(X, contents_Y, styles_Y, content_lap, device, lr, num_epochs, lr_decay
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description="Generate a stylized image based on a content image and a style image")
-    parser.add_argument("--style", type=str, default="images/monet1.jpg")
-    parser.add_argument("--content", type=str, default="images/content1.jpg")
+    parser.add_argument("--style", type=str, default="input/style/monet2.jpg")
+    parser.add_argument("--content", type=str, default="input/content/content3.jpg")
     parser.add_argument("--epochs", type=int, default=500)
     parser.add_argument("--lr", type=float, default=0.3)
     parser.add_argument("-H", type=int, default=384)

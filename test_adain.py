@@ -5,9 +5,10 @@ import torch.nn as nn
 import torchvision
 from torchvision.utils import save_image
 from PIL import Image
-from IPython.display import Image as display_image
 import net
 from function import adaptive_instance_normalization, coral
+import saverloader
+import os
 
 
 def test_transform(size=512):
@@ -33,7 +34,8 @@ if __name__ == "__main__":
     parser.add_argument('--style', type=str)
     parser.add_argument('--style_dir', type=str)
     parser.add_argument('--vgg', type=str, default='models/vgg_normalized.pth')
-    parser.add_argument('--decoder', type=str, default='models/decoder.pth')
+    parser.add_argument('--ckpt_dir', type=str, default='../../adain_results/checkpoints')
+    parser.add_argument('--init_dir', type=str, default='adain_10.0_1.0_5.0_4_084825')
 
     parser.add_argument('--content_size', type=int, default=512)
     parser.add_argument('--style_size', type=int, default=512)
@@ -41,13 +43,12 @@ if __name__ == "__main__":
     parser.add_argument('--alpha', type=float, default=1.0) # style-content ratio
 
     args = parser.parse_args()
-    style_name = args.style.split('/')[-1][:-4]
-    content_name = args.content.split('/')[-1][:-4]
 
+    assert (args.init_dir)
 
-    output_dir = Path(args.output)
+    output_dir = Path(args.output) / args.init_dir
     output_dir.mkdir(exist_ok=True, parents=True)
-
+    
     # Either --content or --contentDir should be given.
     assert (args.content or args.content_dir)
     if args.content:
@@ -68,14 +69,14 @@ if __name__ == "__main__":
         style_dir = Path(args.style_dir)
         style_paths = [f for f in style_dir.glob('*')]
 
-
     decoder = net.decoder
     vgg = net.vgg
 
     decoder.eval()
     vgg.eval()
 
-    decoder.load_state_dict(torch.load(args.decoder))
+    #decoder.load_state_dict(torch.load(args.decoder))
+    saverloader.load(os.path.join(args.ckpt_dir, args.init_dir), decoder)
     vgg.load_state_dict(torch.load(args.vgg))
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -100,7 +101,7 @@ if __name__ == "__main__":
                 output = style_transfer(vgg, decoder, content, style, args.alpha)
             output = output.cpu()
 
-            output_name = output_dir / '{:s}_stylized_{:s}{:s}'.format(
-                content_path.stem, style_path.stem, args.save_ext)
+            output_name = output_dir / '{:s}_{:s}{:s}'.format(
+                content_path.stem, style_path.stem, ".jpg")
             save_image(output, str(output_name))
 
