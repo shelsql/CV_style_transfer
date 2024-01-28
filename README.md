@@ -6,7 +6,11 @@ This repository contains a PyTorch implementation of [Gatys' neural style transf
 
 Great thanks to the original authors, [this](https://d2l.ai/chapter_computer-vision/neural-style.html) tutorial and [this](https://github.com/naoto0804/pytorch-AdaIN) PyTorch implementation, both from which this implementation borrows code.
 
-## Requirements
+## Environment
+
+```bash
+conda env create --name envname --file=environment.yml
+```
 
 ## Usage
 
